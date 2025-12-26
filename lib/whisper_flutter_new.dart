@@ -20,14 +20,21 @@ import "package:whisper_flutter_new/download_model.dart";
 import "package:whisper_flutter_new/whisper_bindings_generated.dart";
 
 export "package:whisper_flutter_new/bean/_models.dart";
-export "package:whisper_flutter_new/download_model.dart" show WhisperModel;
+export "package:whisper_flutter_new/download_model.dart"
+    show WhisperModel, DownloadProgressCallback;
 
 /// Entry point of whisper_flutter_plus
 class Whisper {
   /// [model] is required
   /// [modelDir] is path where downloaded model will be stored.
   /// Default to library directory
-  const Whisper({required this.model, this.modelDir, this.downloadHost});
+  /// [onDownloadProgress] is an optional callback for download progress updates
+  const Whisper({
+    required this.model,
+    this.modelDir,
+    this.downloadHost,
+    this.onDownloadProgress,
+  });
 
   /// model used for transcription
   final WhisperModel model;
@@ -37,6 +44,9 @@ class Whisper {
 
   // override of model download host
   final String? downloadHost;
+
+  /// Optional callback for download progress updates
+  final DownloadProgressCallback? onDownloadProgress;
 
   DynamicLibrary _openLib() {
     if (Platform.isAndroid) {
@@ -67,7 +77,11 @@ class Whisper {
       return;
     } else {
       await downloadModel(
-          model: model, destinationPath: modelDir, downloadHost: downloadHost);
+        model: model,
+        destinationPath: modelDir,
+        downloadHost: downloadHost,
+        onProgress: onDownloadProgress,
+      );
     }
   }
 
