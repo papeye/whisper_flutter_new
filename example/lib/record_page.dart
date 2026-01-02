@@ -17,10 +17,13 @@ class RecordController extends StateNotifier<bool> {
     state = true;
     final Directory appDirectory = await getApplicationDocumentsDirectory();
     await _record.start(
-      const RecordConfig(),
-      // encoder: AudioEncoder.pcm16bit,
-      // samplingRate: 16000,
-      path: "${appDirectory.path}/test.m4a",
+      const RecordConfig(
+        encoder: AudioEncoder.wav,
+        sampleRate: 16000,
+        numChannels: 1,
+        bitRate: 256000,
+      ),
+      path: "${appDirectory.path}/test.wav",
     );
   }
 
